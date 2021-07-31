@@ -56,6 +56,7 @@ public:
             sprintf(name, "fractal%d.bmp", frame + 1000);
             writeBMP(dimension, dimension, pic.data(), name);
         }
+        return pic;
     }
 };
 
