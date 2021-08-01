@@ -1,11 +1,8 @@
-#include <iostream>
 #include "MandelbrotGenerator.h"
 #include <mpi.h>
+#include "MandelbrotManager.h"
+#include "MandelbrotWorker.h"
 
-long Parse(const char* c)
-{
-    return strtol(c, nullptr, 10);
-}
 
 int main(int argc, char** argv)
 {
@@ -22,23 +19,14 @@ int main(int argc, char** argv)
 
     MPI_Get_processor_name(processor_name, &name_len);
 
+
     if (myRank == 0)
     {
-        printf("Master process running in %s, rank %d out of %d processors\n", processor_name, myRank, size);
+        MandelbrotManager::Start(argc, argv);
     }
     else
     {
-        printf("Slave process running in %s, rank %d out of %d processors\n", processor_name, myRank, size);
-    }
-
-    if (argc == 3)
-    {
-//        MandelbrotGenerator::Generate(Parse(argv[2]), Parse(argv[1]));
-    }
-    else
-    {
-        std::cout << "DEBUG Mode"  << std::endl;
-        //MandelbrotGenerator::Generate(20, 1024);
+        MandelbrotWorker::Start();
     }
 
     MPI_Finalize();

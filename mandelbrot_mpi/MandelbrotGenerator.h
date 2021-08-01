@@ -7,7 +7,6 @@
 
 #include "Fractal.h"
 #include <vector>
-static const double Delta = 0.001;
 static const double xMid = 0.23701;
 static const double yMid = 0.521;
 
@@ -16,10 +15,8 @@ typedef unsigned char uchar;
 class MandelbrotGenerator
 {
 public:
-    static std::vector<uchar> Generate(std::vector<uchar>& pic, int frames, int dimension)
+    static void Generate(std::vector<uchar>& pic, float delta, float deltaAcceleration, int frames, int dimension)
     {
-        // compute frames
-        double delta = Delta;
         for (int frame = 0; frame < frames; frame++)
         {
             const double xMin = xMid - delta;
@@ -46,17 +43,9 @@ public:
                     pic[frame * dimension * dimension + row * dimension + col] = (unsigned char) depth;
                 }
             }
-            delta *= 0.98;
+            delta *= deltaAcceleration;
         }
 
-        // verify result by writing frames to BMP files
-        for (int frame = 0; frame < frames; frame++)
-        {
-            char name[32];
-            sprintf(name, "fractal%d.bmp", frame + 1000);
-            writeBMP(dimension, dimension, pic.data(), name);
-        }
-        return pic;
     }
 };
 
