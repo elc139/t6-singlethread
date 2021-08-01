@@ -23,7 +23,7 @@ public:
         const float deltaAcceleration = 0.98f;
 
         int resolution = (argc == 3) ? (int) Parse(argv[1]) : 512;
-        int frames = (argc == 3) ? (int) Parse(argv[2]) : 30000;
+        int frames = (argc == 3) ? (int) Parse(argv[2]) : 1000;
         int workers;
         MPI_Comm_size(MPI_COMM_WORLD, &workers);
         workers--; // Since the manager won't be a worker
