@@ -20,10 +20,12 @@ static long Parse(const char* c)
 public:
     static void Start(int argc, char **argv)
     {
+        std::cout << argc << std::endl;
+
         const float delta = 0.001f;
         const float deltaAcceleration = 0.98f;
 
-        auto start = std::chrono::system_clock::now();
+        auto startTime = std::chrono::system_clock::now();
 
         int resolution = (argc == 3) ? (int) Parse(argv[1]) : 512;
         int frames = (argc == 3) ? (int) Parse(argv[2]) : 50;
@@ -71,7 +73,7 @@ public:
 
         auto end = std::chrono::system_clock::now();
 
-        std::chrono::duration<double> elapsed_seconds = end - start;
+        std::chrono::duration<double> elapsed_seconds = end - startTime;
 
         std::cout << "Elapsed time: " << elapsed_seconds.count() << "s\n";
 
