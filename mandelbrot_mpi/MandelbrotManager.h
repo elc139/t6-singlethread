@@ -33,6 +33,8 @@ public:
         MPI_Comm_size(MPI_COMM_WORLD, &workers);
         workers--; // Since the manager won't be a worker
 
+	std::cout << "Workers: " << workers << ". Frames: " << frames << std::endl;
+
         // Static schedule
         // Split work into assignees and dispatch to each worker async
         for (int i = 0; i < workers; i++)
