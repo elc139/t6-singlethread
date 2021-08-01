@@ -6,6 +6,7 @@
 #define MANDELBROT_MANDELBROT_MANAGER_H
 #include <sstream>
 #include <iostream>
+#include <chrono>
 #include "PacketTag.h"
 
 class MandelbrotManager
@@ -21,6 +22,8 @@ public:
     {
         const float delta = 0.001f;
         const float deltaAcceleration = 0.98f;
+
+        auto start = std::chrono::system_clock::now();
 
         int resolution = (argc == 3) ? (int) Parse(argv[1]) : 512;
         int frames = (argc == 3) ? (int) Parse(argv[2]) : 50;
@@ -57,13 +60,21 @@ public:
             int bufferSize = workerFrames * frameSize;
             std::vector<uchar> batch(bufferSize);
             MPI_Recv(batch.data(), bufferSize, MPI_UNSIGNED_CHAR, rank, PacketTag::Reply, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            for (int frame = 0; frame < workerFrames; frame++)
-            {
-                char name[32];
-                sprintf(name, "Mandelbrot%d.bmp", frameIndex+++ 1000);
-                writeBMP(resolution, resolution, &batch[frame * resolution * resolution], name);
-            }
+
+            //for (int frame = 0; frame < workerFrames; frame++)
+            //{
+                // char name[32];
+                //sprintf(name, "Mandelbrot%d.bmp", frameIndex+++ 1000);
+                //writeBMP(resolution, resolution, &batch[frame * resolution * resolution], name);
+            //}
         }
+
+        auto end = std::chrono::system_clock::now();
+
+        std::chrono::duration<double> elapsed_seconds = end - start;
+
+        std::cout << "Elapsed time: " << elapsed_seconds.count() << "s\n";
+
     }
 };
 
