@@ -27,8 +27,8 @@ public:
 
         auto startTime = std::chrono::system_clock::now();
 
-        int resolution = (argc == 3) ? (int) Parse(argv[1]) : 512;
-        int frames = (argc == 3) ? (int) Parse(argv[2]) : 50;
+        int resolution = (argc == 3) ? (int) Parse(argv[1]) : 256;
+        int frames = (argc == 3) ? (int) Parse(argv[2]) : 600;
         int workers;
         MPI_Comm_size(MPI_COMM_WORLD, &workers);
         workers--; // Since the manager won't be a worker
@@ -59,18 +59,20 @@ public:
             int start = i * frames / workers;
             int end = i == workers - 1 ? frames - 1 : (i + 1) * frames / workers - 1;
 
+
             int workerFrames = end - start;
+            std::cout << workerFrames << std::endl;
             int frameSize = resolution * resolution;
             int bufferSize = workerFrames * frameSize;
             std::vector<uchar> batch(bufferSize);
             MPI_Recv(batch.data(), bufferSize, MPI_UNSIGNED_CHAR, rank, PacketTag::Reply, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
-            //for (int frame = 0; frame < workerFrames; frame++)
-            //{
-                // char name[32];
-                //sprintf(name, "Mandelbrot%d.bmp", frameIndex+++ 1000);
-                //writeBMP(resolution, resolution, &batch[frame * resolution * resolution], name);
-            //}
+            for (int frame = 0; frame < workerFrames; frame++)
+            {
+                char name[32];
+                sprintf(name, "Mandelbrot%d.bmp", frameIndex+++ 1000);
+                writeBMP(resolution, resolution, &batch[frame * resolution * resolution], name);
+            }
         }
 
         auto end = std::chrono::system_clock::now();

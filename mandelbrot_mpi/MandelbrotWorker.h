@@ -18,9 +18,7 @@ public:
     {
         int data[3];
         MPI_Recv(&data, 3, MPI_INT, 0, PacketTag::Request, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        int start = data[0];
-        int frames = data[1];
-        int resolution = data[2];
+        int start = data[0]; int frames = data[1]; int resolution = data[2];
         std::stringstream msg;
         msg << "Received work from frame " << start << " to " << start + frames << " with resolution " << resolution << std::endl;
         std::cout << msg.str(); // Avoids race condition
